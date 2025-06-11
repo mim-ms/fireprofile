@@ -9,7 +9,7 @@ from PySide6.QtWidgets import (QApplication, QMainWindow, QWidget, QVBoxLayout,
                               QHBoxLayout, QPushButton, QLabel, QLineEdit,
                               QComboBox, QTableWidget, QTableWidgetItem,
                               QDialog, QMessageBox, QTabWidget, QStyleFactory,
-                              QHeaderView)
+                              QHeaderView, QCheckBox)
 from PySide6.QtCore import Qt, QTimer
 
 CONFIG_FILE = os.path.expanduser("~/.fireprofile.json")
@@ -65,6 +65,10 @@ class ProfileDialog(QDialog):
         for profile in profiles:
             self.profile_combo.addItem(profile["name"])
         
+        # Add checkbox for automatic rule creation
+        self.remember_choice = QCheckBox("Remember this choice")
+        self.remember_choice.setChecked(True)  # Checked by default
+        
         buttons = QHBoxLayout()
         open_btn = QPushButton("Open")
         cancel_btn = QPushButton("Cancel")
@@ -77,6 +81,7 @@ class ProfileDialog(QDialog):
         
         layout.addWidget(QLabel("Select Firefox Profile:"))
         layout.addWidget(self.profile_combo)
+        layout.addWidget(self.remember_choice)
         layout.addLayout(buttons)
         
         self.setLayout(layout)
@@ -367,6 +372,13 @@ def main():
             profile_name = dialog.profile_combo.currentText()
             profile = next((p for p in config_manager.get_profiles() if p["name"] == profile_name), None)
             if profile:
+                # Create domain rule if checkbox is checked
+                if dialog.remember_choice.isChecked():
+                    # Extract parent domain (e.g., example.com from sub.example.com)
+                    parts = domain.split('.')
+                    if len(parts) > 1:
+                        parent_domain = '.'.join(parts[-2:])  # Get last two parts for parent domain
+                        config_manager.set_domain_profile(parent_domain, profile_name)
                 os.system(f"{profile['command']} {url}")
     
     sys.exit(app.exec())
