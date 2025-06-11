@@ -12,6 +12,15 @@ A Firefox profile manager that allows you to open URLs in specific Firefox profi
 ## Installation
 
 1. Install the required dependencies:
+
+On Arch:
+
+```bash
+sudo pacman -S pyside6
+```
+
+Other systems:
+
 ```bash
 pip install -r requirements.txt
 ```
