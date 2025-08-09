@@ -1,7 +1,7 @@
 [Desktop Entry]
 Name=FireProfile
 Comment=Firefox Profile Manager
-Exec=/usr/bin/python3 /home/david/Projects/fireprofile-python/fireprofile.py %u
+Exec=/usr/bin/python3 /usr/local/bin/fireprofile.py %u
 Terminal=false
 Type=Application
 Categories=Network;WebBrowser;
